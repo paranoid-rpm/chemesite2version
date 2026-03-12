@@ -2,34 +2,57 @@ import { NavLink } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
 
 const links = [
-  { to: '/', label: 'Главная' },
-  { to: '/theory', label: 'Теория' },
-  { to: '/periodic', label: 'Таблица' },
-  { to: '/lab', label: 'Лаборатория' },
-  { to: '/quiz', label: 'Квиз' },
+  { to: '/', label: 'Home' },
+  { to: '/theory', label: 'Theory' },
+  { to: '/periodic', label: 'Periodic Table' },
+  { to: '/lab', label: 'Laboratory' },
+  { to: '/quiz', label: 'Quiz' },
 ]
 
 export default function Navbar() {
   const { dark, toggle } = useTheme()
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
-      <nav className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-        <span className="text-xl font-bold tracking-tight">
-          ⚗️ <span className="text-indigo-500">Хим</span>Сайт
-        </span>
+    <header
+      style={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 50,
+        background: 'var(--bg)',
+        borderBottom: '1px solid var(--border)',
+        backdropFilter: 'blur(12px)',
+      }}
+    >
+      <nav
+        style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem', height: 56 }}
+        className="flex items-center justify-between"
+      >
+        {/* Logo */}
+        <NavLink to="/" style={{ textDecoration: 'none' }}>
+          <span style={{ fontWeight: 700, fontSize: '1rem', letterSpacing: '-0.03em', color: 'var(--text)' }}>
+            Chem<span style={{ fontFamily: 'JetBrains Mono, monospace', fontWeight: 400 }}>.guide</span>
+          </span>
+        </NavLink>
 
-        <ul className="hidden md:flex items-center gap-1">
+        {/* Links */}
+        <ul style={{ display: 'flex', alignItems: 'center', gap: 2, listStyle: 'none', margin: 0, padding: 0 }}>
           {links.map(({ to, label }) => (
             <li key={to}>
               <NavLink
                 to={to}
                 end={to === '/'}
-                className={({ isActive }) =>
-                  isActive
-                    ? 'px-4 py-2 rounded-xl bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 font-medium text-sm'
-                    : 'btn-ghost text-sm'
-                }
+                style={({ isActive }) => ({
+                  display: 'block',
+                  padding: '6px 14px',
+                  borderRadius: 8,
+                  fontSize: '0.8rem',
+                  fontWeight: isActive ? 600 : 400,
+                  color: isActive ? 'var(--text)' : 'var(--text2)',
+                  background: isActive ? 'var(--bg2)' : 'transparent',
+                  textDecoration: 'none',
+                  border: isActive ? '1px solid var(--border)' : '1px solid transparent',
+                  transition: 'all 0.15s ease',
+                })}
               >
                 {label}
               </NavLink>
@@ -37,12 +60,24 @@ export default function Navbar() {
           ))}
         </ul>
 
+        {/* Theme toggle */}
         <button
           onClick={toggle}
-          className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-xl"
-          aria-label="Переключить тему"
+          style={{
+            width: 36, height: 36,
+            borderRadius: 8,
+            border: '1px solid var(--border)',
+            background: 'var(--bg2)',
+            color: 'var(--text)',
+            cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: '0.75rem',
+            fontFamily: 'JetBrains Mono, monospace',
+            fontWeight: 500,
+            transition: 'all 0.15s ease',
+          }}
         >
-          {dark ? '☀️' : '🌙'}
+          {dark ? 'L' : 'D'}
         </button>
       </nav>
     </header>
