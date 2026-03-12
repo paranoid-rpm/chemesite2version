@@ -9,8 +9,11 @@ const links = [
   { to: '/quiz', label: 'Квиз' },
 ]
 
+const MODE_LABELS = { system: 'A', light: 'С', dark: 'Т' }
+const MODE_TITLES = { system: 'Системная тема', light: 'Светлая', dark: 'Тёмная' }
+
 export default function Navbar() {
-  const { dark, toggle } = useTheme()
+  const { mode, toggle } = useTheme()
 
   return (
     <header style={{
@@ -45,15 +48,22 @@ export default function Navbar() {
           ))}
         </ul>
 
-        <button onClick={toggle} style={{
-          width: 36, height: 36, borderRadius: 8,
-          border: '1px solid var(--border)', background: 'var(--bg2)',
-          color: 'var(--text)', cursor: 'pointer',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: '0.75rem', fontFamily: 'JetBrains Mono, monospace', fontWeight: 500,
-          transition: 'all 0.15s ease',
-        }}>
-          {dark ? 'С' : 'Т'}
+        <button
+          onClick={toggle}
+          title={MODE_TITLES[mode]}
+          style={{
+            width: 42, height: 32, borderRadius: 8,
+            border: '1px solid var(--border)', background: 'var(--bg2)',
+            color: 'var(--text)', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4,
+            fontSize: '0.72rem', fontFamily: 'JetBrains Mono, monospace', fontWeight: 600,
+            transition: 'all 0.15s ease',
+          }}
+        >
+          {MODE_LABELS[mode]}
+          <span style={{ fontSize: '0.55rem', color: 'var(--text3)', letterSpacing: 0 }}>
+            {mode === 'system' ? '•' : mode === 'light' ? '○' : '●'}
+          </span>
         </button>
       </nav>
     </header>
