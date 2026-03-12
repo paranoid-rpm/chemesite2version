@@ -10,17 +10,15 @@ import Quiz from './pages/Quiz'
 export default function App() {
   return (
     <ThemeProvider>
-      <div className="min-h-screen">
+      <div style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)', transition: 'background 0.3s, color 0.3s' }}>
         <Navbar />
-        <main className="max-w-6xl mx-auto px-4 py-8">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/theory" element={<Theory />} />
-            <Route path="/periodic" element={<PeriodicTable />} />
-            <Route path="/lab" element={<Lab />} />
-            <Route path="/quiz" element={<Quiz />} />
-          </Routes>
-        </main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/theory" element={<Theory />} />
+          <Route path="/periodic" element={<PeriodicTable />} />
+          <Route path="/lab" element={<Lab />} />
+          <Route path="/quiz" element={<Quiz />} />
+        </Routes>
       </div>
     </ThemeProvider>
   )

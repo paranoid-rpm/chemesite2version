@@ -1,140 +1,106 @@
 import { useState, useRef } from 'react'
 
 const REAGENTS = [
-  { id: 'HCl', label: 'HCl', name: 'Соляная кислота', color: '#fde68a', emoji: '🟡' },
-  { id: 'NaOH', label: 'NaOH', name: 'Гидроксид натрия', color: '#bbf7d0', emoji: '🟢' },
-  { id: 'H2SO4', label: 'H₂SO₄', name: 'Серная кислота', color: '#fca5a5', emoji: '🔴' },
-  { id: 'BaCl2', label: 'BaCl₂', name: 'Хлорид бария', color: '#e9d5ff', emoji: '🟣' },
-  { id: 'Na', label: 'Na', name: 'Натрий', color: '#fed7aa', emoji: '🟠' },
-  { id: 'H2O', label: 'H₂O', name: 'Вода', color: '#bae6fd', emoji: '🟦' },
-  { id: 'CuSO4', label: 'CuSO₄', name: 'Сульфат меди', color: '#a5f3fc', emoji: '🟦' },
-  { id: 'Fe', label: 'Fe', name: 'Железо', color: '#d1d5db', emoji: '⚪' },
-  { id: 'AgNO3', label: 'AgNO₃', name: 'Нитрат серебра', color: '#f3f4f6', emoji: '⚪' },
-  { id: 'CO2', label: 'CO₂', name: 'Углекислый газ', color: '#e5e7eb', emoji: '💨' },
-  { id: 'Ca(OH)2', label: 'Ca(OH)₂', name: 'Известковая вода', color: '#fef9c3', emoji: '🟡' },
-  { id: 'Zn', label: 'Zn', name: 'Цинк', color: '#e0e7ff', emoji: '🟣' },
+  { id: 'HCl', label: 'HCl', name: 'Hydrochloric acid' },
+  { id: 'NaOH', label: 'NaOH', name: 'Sodium hydroxide' },
+  { id: 'H2SO4', label: 'H₂SO₄', name: 'Sulfuric acid' },
+  { id: 'BaCl2', label: 'BaCl₂', name: 'Barium chloride' },
+  { id: 'Na', label: 'Na', name: 'Sodium (metal)' },
+  { id: 'H2O', label: 'H₂O', name: 'Water' },
+  { id: 'CuSO4', label: 'CuSO₄', name: 'Copper(II) sulfate' },
+  { id: 'Fe', label: 'Fe', name: 'Iron' },
+  { id: 'AgNO3', label: 'AgNO₃', name: 'Silver nitrate' },
+  { id: 'CO2', label: 'CO₂', name: 'Carbon dioxide' },
+  { id: 'Ca(OH)2', label: 'Ca(OH)₂', name: 'Calcium hydroxide' },
+  { id: 'Zn', label: 'Zn', name: 'Zinc' },
 ]
 
 const REACTIONS = [
-  {
-    a: 'HCl', b: 'NaOH',
-    result: 'NaCl + H₂O',
-    type: 'Нейтрализация',
-    effect: 'heat',
-    resultColor: '#dbeafe',
-    desc: 'Кислота реагирует со щёлочью. Выделяется тепло, раствор становится нейтральным.',
-    emoji: '🌪️',
-  },
-  {
-    a: 'H2SO4', b: 'BaCl2',
-    result: 'BaSO₄↓ + 2HCl',
-    type: 'Осадок',
-    effect: 'precipitate',
-    resultColor: '#f1f5f9',
-    desc: 'Образуется белый нерастворимый осадок сульфата бария.',
-    emoji: '🌨️',
-  },
-  {
-    a: 'Na', b: 'H2O',
-    result: 'NaOH + H₂↑',
-    type: 'Бурная реакция',
-    effect: 'explosion',
-    resultColor: '#fef3c7',
-    desc: 'Натрий бурно реагирует с водой. Выделяется водород, реакция экзотермическая.',
-    emoji: '💥',
-  },
-  {
-    a: 'CuSO4', b: 'Fe',
-    result: 'FeSO₄ + Cu↓',
-    type: 'Замещение',
-    effect: 'precipitate',
-    resultColor: '#fcd34d',
-    desc: 'Железо вытесняет медь. На поверхности железа осаждается красная медь.',
-    emoji: '🟤',
-  },
-  {
-    a: 'AgNO3', b: 'HCl',
-    result: 'AgCl↓ + HNO₃',
-    type: 'Осадок',
-    effect: 'precipitate',
-    resultColor: '#f8fafc',
-    desc: 'Творожистый белый осадок хлорида серебра. Качественная реакция на Cl⁻.',
-    emoji: '⚪',
-  },
-  {
-    a: 'CO2', b: 'Ca(OH)2',
-    result: 'CaCO₃↓ + H₂O',
-    type: 'Осадок',
-    effect: 'precipitate',
-    resultColor: '#f0fdf4',
-    desc: 'Помутнение известковой воды. Белый осадок карбоната кальция.',
-    emoji: '🥛',
-  },
-  {
-    a: 'Zn', b: 'HCl',
-    result: 'ZnCl₂ + H₂↑',
-    type: 'Газ',
-    effect: 'bubbles',
-    resultColor: '#f0f9ff',
-    desc: 'Цинк растворяется в кислоте с выделением водорода.',
-    emoji: '🫧',
-  },
-  {
-    a: 'Na', b: 'HCl',
-    result: 'NaCl + H₂↑',
-    type: 'Бурная реакция',
-    effect: 'explosion',
-    resultColor: '#fff7ed',
-    desc: 'Натрий вытесняет водород из кислоты. Бурная реакция с выделением тепла.',
-    emoji: '💥',
-  },
-  {
-    a: 'H2SO4', b: 'NaOH',
-    result: 'Na₂SO₄ + H₂O',
-    type: 'Нейтрализация',
-    effect: 'heat',
-    resultColor: '#eff6ff',
-    desc: 'Серная кислота нейтрализуется щёлочью. Сильный разогрев, pH стремится к 7.',
-    emoji: '🌪️',
-  },
+  { a: 'HCl', b: 'NaOH', result: 'NaCl + H₂O', type: 'Neutralization', effect: 'heat', desc: 'Acid reacts with base. Heat is released. Solution becomes neutral (pH ≈ 7). HCl + NaOH → NaCl + H₂O' },
+  { a: 'H2SO4', b: 'BaCl2', result: 'BaSO₄↓ + 2HCl', type: 'Precipitation', effect: 'precipitate', desc: 'Dense white precipitate of barium sulfate forms. BaSO₄ is insoluble in water — diagnostic test for SO₄²⁻.' },
+  { a: 'Na', b: 'H2O', result: 'NaOH + H₂↑', type: 'Displacement', effect: 'explosion', desc: 'Sodium reacts vigorously with water. Hydrogen gas is released. Strongly exothermic. 2Na + 2H₂O → 2NaOH + H₂↑' },
+  { a: 'CuSO4', b: 'Fe', result: 'FeSO₄ + Cu↓', type: 'Displacement', effect: 'precipitate', desc: 'Iron displaces copper. Red copper deposits on iron surface. Fe is above Cu in the activity series. CuSO₄ + Fe → FeSO₄ + Cu↓' },
+  { a: 'AgNO3', b: 'HCl', result: 'AgCl↓ + HNO₃', type: 'Precipitation', effect: 'precipitate', desc: 'Curdy white AgCl precipitate forms instantly. Qualitative test for chloride ions. AgNO₃ + HCl → AgCl↓ + HNO₃' },
+  { a: 'CO2', b: 'Ca(OH)2', result: 'CaCO₃↓ + H₂O', type: 'Precipitation', effect: 'precipitate', desc: 'Limewater turns milky. White CaCO₃ precipitate. Test for CO₂. Ca(OH)₂ + CO₂ → CaCO₃↓ + H₂O' },
+  { a: 'Zn', b: 'HCl', result: 'ZnCl₂ + H₂↑', type: 'Gas evolution', effect: 'bubbles', desc: 'Zinc dissolves in hydrochloric acid with characteristic bubbling. Hydrogen gas is released. Zn + 2HCl → ZnCl₂ + H₂↑' },
+  { a: 'Na', b: 'HCl', result: 'NaCl + H₂↑', type: 'Displacement', effect: 'explosion', desc: 'Sodium displaces hydrogen from acid. Vigorous, exothermic. Na + HCl → NaCl + ½H₂↑' },
+  { a: 'H2SO4', b: 'NaOH', result: 'Na₂SO₄ + H₂O', type: 'Neutralization', effect: 'heat', desc: 'Strong acid-base neutralization. Highly exothermic. H₂SO₄ + 2NaOH → Na₂SO₄ + 2H₂O' },
 ]
 
-function Bubble({ style }) {
+function FlaskSVG({ effect, active }) {
   return (
-    <div
-      className="absolute rounded-full bg-white/40 animate-bounce"
-      style={style}
-    />
-  )
-}
+    <svg width="120" height="140" viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+      {/* Flask body */}
+      <path
+        d="M45 10 L45 55 L10 115 Q8 130 25 132 L95 132 Q112 130 110 115 L75 55 L75 10 Z"
+        fill="var(--bg2)"
+        stroke="var(--text)"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      {/* Flask neck */}
+      <rect x="40" y="6" width="40" height="6" rx="2" fill="var(--text)" opacity="0.15" />
+      <line x1="40" y1="8" x2="80" y2="8" stroke="var(--text)" strokeWidth="1.5" />
 
-function FlaskAnimation({ effect, color }) {
-  const bubbles = Array.from({ length: 8 }, (_, i) => ({
-    width: `${6 + Math.random() * 10}px`,
-    height: `${6 + Math.random() * 10}px`,
-    left: `${10 + i * 10}%`,
-    bottom: `${10 + Math.random() * 40}%`,
-    animationDelay: `${i * 0.15}s`,
-    animationDuration: `${0.6 + Math.random() * 0.6}s`,
-  }))
+      {/* Liquid */}
+      {active && (
+        <clipPath id="flaskClip">
+          <path d="M45 10 L45 55 L10 115 Q8 130 25 132 L95 132 Q112 130 110 115 L75 55 L75 10 Z" />
+        </clipPath>
+      )}
+      {active && (
+        <rect
+          x="5" y="80" width="110" height="60"
+          fill={effect === 'explosion' ? 'rgba(251,191,36,0.3)' : effect === 'precipitate' ? 'rgba(180,180,180,0.25)' : effect === 'heat' ? 'rgba(200,200,200,0.2)' : 'rgba(150,200,255,0.2)'}
+          clipPath="url(#flaskClip)"
+          style={{ transition: 'all 0.6s ease' }}
+        />
+      )}
 
-  return (
-    <div
-      className="relative w-28 h-28 rounded-full flex items-center justify-center overflow-hidden shadow-2xl transition-all duration-700"
-      style={{ background: color }}
-    >
-      {effect === 'bubbles' && bubbles.map((s, i) => <Bubble key={i} style={s} />)}
-      {effect === 'explosion' && (
-        <div className="absolute inset-0 animate-ping rounded-full bg-orange-300/40" />
+      {/* Bubbles for gas effect */}
+      {active && effect === 'bubbles' && (
+        <>
+          {[35, 50, 65, 75].map((x, i) => (
+            <circle key={i} cx={x} cy={90 + i * 8} r={2.5}
+              fill="rgba(150,200,255,0.7)"
+              style={{ animation: `fadeUp ${0.8 + i * 0.2}s ease infinite`, animationDelay: `${i * 0.15}s` }}
+            />
+          ))}
+        </>
       )}
-      {effect === 'precipitate' && (
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-16 h-4 bg-white/60 rounded-full blur-sm animate-pulse" />
+
+      {/* Precipitate line */}
+      {active && effect === 'precipitate' && (
+        <line x1="25" y1="122" x2="95" y2="122" stroke="rgba(200,200,200,0.8)" strokeWidth="4" strokeLinecap="round"
+          style={{ animation: 'fadeIn 0.8s ease both' }}
+        />
       )}
-      {effect === 'heat' && (
-        <div className="absolute inset-0 rounded-full animate-pulse bg-yellow-200/30" />
+
+      {/* Heat rings */}
+      {active && effect === 'heat' && (
+        <>
+          <circle cx="60" cy="100" r="12" stroke="rgba(200,200,200,0.3)" strokeWidth="1" fill="none"
+            style={{ animation: 'ping 1.5s ease infinite' }}
+          />
+          <circle cx="60" cy="100" r="20" stroke="rgba(200,200,200,0.15)" strokeWidth="1" fill="none"
+            style={{ animation: 'ping 1.5s ease infinite', animationDelay: '0.3s' }}
+          />
+        </>
       )}
-      <span className="text-4xl z-10 select-none">⚗️</span>
-    </div>
+
+      {/* Explosion */}
+      {active && effect === 'explosion' && (
+        <>
+          {[0, 60, 120, 180, 240, 300].map((angle, i) => {
+            const rad = angle * Math.PI / 180
+            const x = 60 + Math.cos(rad) * 25
+            const y = 95 + Math.sin(rad) * 20
+            return <circle key={i} cx={x} cy={y} r="2" fill="rgba(251,191,36,0.6)"
+              style={{ animation: `fadeIn 0.3s ease ${i * 0.05}s both` }} />
+          })}
+        </>
+      )}
+    </svg>
   )
 }
 
@@ -142,220 +108,183 @@ export default function Lab() {
   const [dropped, setDropped] = useState([])
   const [reaction, setReaction] = useState(null)
   const [animating, setAnimating] = useState(false)
-  const [shake, setShake] = useState(false)
   const [draggingId, setDraggingId] = useState(null)
   const [draggingOver, setDraggingOver] = useState(false)
-  const dropZoneRef = useRef(null)
-
-  const flaskColor = reaction
-    ? reaction.resultColor
-    : dropped.length === 0
-    ? 'rgba(99,102,241,0.08)'
-    : dropped.length === 1
-    ? REAGENTS.find(r => r.id === dropped[0])?.color || '#e0e7ff'
-    : '#d1fae5'
 
   const handleDragStart = (e, id) => {
+    if (dropped.includes(id) || dropped.length >= 2) return
     setDraggingId(id)
     e.dataTransfer.setData('reagentId', id)
-    e.dataTransfer.effectAllowed = 'copy'
   }
 
   const handleDrop = (e) => {
     e.preventDefault()
     setDraggingOver(false)
     const id = e.dataTransfer.getData('reagentId')
-    if (!id) return
-    if (dropped.includes(id)) return
-    if (dropped.length >= 2) return
-
+    if (!id || dropped.includes(id) || dropped.length >= 2) return
     const next = [...dropped, id]
     setDropped(next)
-
     if (next.length === 2) {
       setAnimating(true)
       setTimeout(() => {
-        const found = REACTIONS.find(
-          r => (r.a === next[0] && r.b === next[1]) || (r.a === next[1] && r.b === next[0])
-        )
-        setReaction(found || { result: 'Нет реакции', type: '', effect: 'none', resultColor: '#f3f4f6', desc: 'Эти вещества не реагируют друг с другом.', emoji: '🤔' })
+        const found = REACTIONS.find(r => (r.a === next[0] && r.b === next[1]) || (r.a === next[1] && r.b === next[0]))
+        setReaction(found || { result: 'No reaction', type: '', effect: 'none', desc: 'These substances do not react under standard conditions.' })
         setAnimating(false)
-      }, 800)
+      }, 900)
     }
   }
 
-  const handleDragOver = (e) => {
-    e.preventDefault()
-    setDraggingOver(true)
-  }
-
-  const handleDragLeave = () => setDraggingOver(false)
-
-  const reset = () => {
-    setDropped([])
-    setReaction(null)
-    setAnimating(false)
-    setShake(false)
-  }
-
-  const handleFlaskClick = () => {
-    if (dropped.length === 2 && reaction) {
-      setShake(true)
-      setTimeout(() => setShake(false), 600)
-    }
-  }
+  const reset = () => { setDropped([]); setReaction(null); setAnimating(false) }
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">⚗️ Лаборатория</h1>
-        <p className="text-gray-500 dark:text-gray-400 mt-1">
-          Перетащивай реагенты в колбу и наблюдай за реакцией.
-        </p>
+    <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem' }}>
+      <div style={{ padding: '48px 0 32px' }} className="fade-up">
+        <p className="section-label" style={{ marginBottom: 12 }}>Interactive</p>
+        <h1 style={{ fontSize: '2rem', letterSpacing: '-0.03em' }}>Laboratory</h1>
+        <p style={{ color: 'var(--text2)', marginTop: 8, fontSize: '0.875rem' }}>Drag two reagents into the reaction vessel to observe the result.</p>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-6">
+      <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: '2.5rem', paddingBottom: '4rem' }}>
 
-        {/* Reagent panel */}
-        <div className="lg:w-72 shrink-0">
-          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Реагенты</h2>
-          <div className="grid grid-cols-3 lg:grid-cols-2 gap-2">
-            {REAGENTS.map(r => (
-              <div
-                key={r.id}
-                draggable
-                onDragStart={e => handleDragStart(e, r.id)}
-                onDragEnd={() => setDraggingId(null)}
-                className={`
-                  card p-2 text-center cursor-grab active:cursor-grabbing select-none
-                  border-2 transition-all duration-150
-                  ${draggingId === r.id ? 'opacity-50 scale-95' : 'hover:border-indigo-400 hover:scale-105'}
-                  ${dropped.includes(r.id) ? 'opacity-40 cursor-not-allowed' : ''}
-                `}
-                style={{ borderColor: dropped.includes(r.id) ? '#6366f1' : undefined }}
-                title={r.name}
-              >
-                <div className="text-lg">{r.emoji}</div>
-                <div className="font-mono font-bold text-sm">{r.label}</div>
-                <div className="text-[10px] text-gray-400 truncate">{r.name}</div>
-              </div>
-            ))}
+        {/* Reagent shelf */}
+        <div style={{ position: 'sticky', top: 72, height: 'fit-content' }}>
+          <div className="section-label" style={{ marginBottom: 12 }}>Reagents</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            {REAGENTS.map(r => {
+              const used = dropped.includes(r.id)
+              return (
+                <div
+                  key={r.id}
+                  draggable={!used && dropped.length < 2}
+                  onDragStart={e => handleDragStart(e, r.id)}
+                  onDragEnd={() => setDraggingId(null)}
+                  style={{
+                    padding: '8px 12px',
+                    borderRadius: 8,
+                    border: '1px solid var(--border)',
+                    background: used ? 'var(--bg)' : draggingId === r.id ? 'var(--text)' : 'var(--bg2)',
+                    color: used ? 'var(--text3)' : draggingId === r.id ? 'var(--bg)' : 'var(--text)',
+                    cursor: used || dropped.length >= 2 ? 'not-allowed' : 'grab',
+                    opacity: used ? 0.4 : 1,
+                    display: 'flex', gap: 10, alignItems: 'center',
+                    transition: 'all 0.15s ease',
+                    userSelect: 'none',
+                  }}
+                >
+                  <span style={{ fontFamily: 'JetBrains Mono, monospace', fontWeight: 600, fontSize: '0.85rem', minWidth: 52 }}>{r.label}</span>
+                  <span style={{ fontSize: '0.7rem', color: used ? 'var(--text3)' : 'var(--text2)' }}>{r.name}</span>
+                </div>
+              )
+            })}
           </div>
         </div>
 
-        {/* Lab workspace */}
-        <div className="flex-1 flex flex-col items-center gap-6">
+        {/* Workspace */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
 
           {/* Drop zone */}
           <div
-            ref={dropZoneRef}
             onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            className={`
-              w-full min-h-[260px] rounded-3xl border-2 border-dashed flex flex-col items-center justify-center gap-6 transition-all duration-200 relative
-              ${draggingOver
-                ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-950/30 scale-[1.01]'
-                : 'border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50'
-              }
-            `}
+            onDragOver={e => { e.preventDefault(); setDraggingOver(true) }}
+            onDragLeave={() => setDraggingOver(false)}
+            style={{
+              minHeight: 280,
+              border: `1px dashed ${draggingOver ? 'var(--text)' : 'var(--border)'}`,
+              borderRadius: 16,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '1.5rem',
+              padding: '2rem',
+              background: draggingOver ? 'var(--bg2)' : 'transparent',
+              transition: 'all 0.2s ease',
+              position: 'relative',
+            }}
           >
-            {/* Dropped reagents */}
-            <div className="flex items-center gap-4">
-              {dropped.map((id, i) => {
-                const r = REAGENTS.find(x => x.id === id)
-                return (
-                  <div key={id} className="flex items-center gap-4">
-                    <div
-                      className="w-16 h-16 rounded-full flex items-center justify-center text-2xl shadow-md font-mono font-bold text-gray-700"
-                      style={{ background: r?.color }}
-                    >
-                      {r?.label}
-                    </div>
-                    {i === 0 && dropped.length === 2 && (
-                      <span className="text-2xl text-gray-400">+</span>
-                    )}
+            {/* Dropped reagent labels */}
+            {dropped.length > 0 && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', position: 'absolute', top: '1.5rem' }}>
+                {dropped.map((id, i) => (
+                  <div key={id} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <span style={{ fontFamily: 'JetBrains Mono, monospace', fontWeight: 600, fontSize: '1.1rem', padding: '4px 12px', border: '1px solid var(--border)', borderRadius: 8, background: 'var(--bg2)' }}>{id}</span>
+                    {i === 0 && dropped.length === 2 && <span style={{ color: 'var(--text3)', fontWeight: 300, fontSize: '1.5rem' }}>+</span>}
                   </div>
-                )
-              })}
-            </div>
+                ))}
+              </div>
+            )}
 
             {/* Flask */}
-            <div
-              onClick={handleFlaskClick}
-              className={`cursor-pointer transition-transform ${shake ? 'animate-bounce' : ''}`}
-            >
+            <div style={{ marginTop: dropped.length > 0 ? '3rem' : 0, transition: 'all 0.3s ease' }}>
               {animating ? (
-                <div className="w-28 h-28 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center animate-pulse">
-                  <span className="text-4xl">⏳</span>
+                <div style={{ width: 120, height: 140, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.75rem', color: 'var(--text3)', animation: 'fadeIn 0.3s ease infinite alternate' }}>reacting...</div>
                 </div>
               ) : (
-                <FlaskAnimation
-                  effect={reaction?.effect || 'none'}
-                  color={flaskColor}
-                />
+                <FlaskSVG effect={reaction?.effect || 'none'} active={dropped.length === 2 && !animating} />
               )}
             </div>
 
             {dropped.length === 0 && (
-              <p className="text-gray-400 text-sm absolute bottom-4">
-                ↑ Перетащивай два реагента сюда
-              </p>
+              <p style={{ color: 'var(--text3)', fontSize: '0.8rem', fontFamily: 'JetBrains Mono, monospace' }}>drag two reagents here</p>
             )}
           </div>
 
-          {/* Result card */}
+          {/* Result */}
           {reaction && !animating && (
-            <div
-              className="w-full card border-2 space-y-3 transition-all duration-500"
-              style={{ borderColor: reaction.effect === 'explosion' ? '#f97316' : '#6366f1' }}
-            >
-              <div className="flex items-center gap-3">
-                <span className="text-4xl">{reaction.emoji}</span>
+            <div className="card fade-up" style={{ borderLeft: '3px solid var(--text)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
                 <div>
-                  <div className="font-mono font-bold text-lg">
+                  <div style={{ fontFamily: 'JetBrains Mono, monospace', fontWeight: 600, fontSize: '1rem', marginBottom: 4 }}>
                     {dropped[0]} + {dropped[1]} → {reaction.result}
                   </div>
                   {reaction.type && (
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300">
-                      {reaction.type}
-                    </span>
+                    <span style={{ fontSize: '0.7rem', padding: '2px 8px', border: '1px solid var(--border)', borderRadius: 99, color: 'var(--text2)', fontFamily: 'JetBrains Mono, monospace' }}>{reaction.type}</span>
                   )}
                 </div>
+                <button onClick={reset} className="btn" style={{ fontSize: '0.75rem', padding: '4px 10px' }}>Clear</button>
               </div>
-              <p className="text-sm text-gray-600 dark:text-gray-300">{reaction.desc}</p>
+              <p style={{ color: 'var(--text2)', fontSize: '0.875rem', lineHeight: 1.7, marginTop: '0.5rem' }}>{reaction.desc}</p>
             </div>
           )}
 
-          {dropped.length > 0 && (
-            <button onClick={reset} className="btn-ghost text-sm">
-              🗑️ Очистить колбу
-            </button>
+          {dropped.length > 0 && !reaction && !animating && (
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <button onClick={reset} className="btn" style={{ fontSize: '0.75rem' }}>Clear flask</button>
+            </div>
           )}
-        </div>
-      </div>
 
-      {/* Hint table */}
-      <div>
-        <h2 className="text-xl font-semibold mb-4">📖 Все доступные реакции</h2>
-        <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">
-          {REACTIONS.map((r, i) => (
-            <button
-              key={i}
-              onClick={() => {
-                setDropped([r.a, r.b])
-                setAnimating(true)
-                setTimeout(() => { setReaction(r); setAnimating(false) }, 600)
-              }}
-              className="card text-left text-sm hover:border-indigo-400 border-2 border-transparent"
-            >
-              <div className="flex items-center gap-2 mb-1">
-                <span>{r.emoji}</span>
-                <span className="font-mono font-semibold">{r.a} + {r.b}</span>
-              </div>
-              <div className="text-gray-500 dark:text-gray-400 text-xs">{r.type} → {r.result}</div>
-            </button>
-          ))}
+          {/* Reaction index */}
+          <div style={{ marginTop: '1rem' }}>
+            <div className="section-label" style={{ marginBottom: 12 }}>Reaction Index</div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 8 }}>
+              {REACTIONS.map((r, i) => (
+                <button
+                  key={i}
+                  onClick={() => {
+                    setDropped([r.a, r.b])
+                    setAnimating(true)
+                    setTimeout(() => { setReaction(r); setAnimating(false) }, 600)
+                  }}
+                  style={{
+                    textAlign: 'left',
+                    padding: '10px 14px',
+                    borderRadius: 8,
+                    border: '1px solid var(--border)',
+                    background: 'var(--bg2)',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease',
+                    color: 'var(--text)',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--text)' }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)' }}
+                >
+                  <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.8rem', fontWeight: 500 }}>{r.a} + {r.b} → {r.result}</div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text3)', marginTop: 2 }}>{r.type}</div>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
